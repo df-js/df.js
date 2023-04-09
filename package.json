@@ -1,0 +1,21 @@
+{
+  "name": "df",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run": "node ./dist/index.js",
+    "tsc": "tsc",
+    "bar": "npm run tsc && npm run run"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-gzip": "^1.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "typescript": "^5.0.4"
+  }
+}
