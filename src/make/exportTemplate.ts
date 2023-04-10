@@ -1,7 +1,8 @@
 import { Template } from "../types/createInitObject"
 import { customEvent, entityEvent, playerEvent } from "../types/events"
-import Zlib from "zlib";
-export function exportTemplate(template: Template): Promise<string> {
+import Zlib from "zlib";import WebSocket from "ws"
+export function exportTemplate(template: Template, templateResult : TemplateResult): Promise<string> {
+
     var block = ""
     
     if ((<customEvent>template.event).eventType) block = (<customEvent>template.event).eventType; else block = "event"
@@ -29,39 +30,168 @@ export function exportTemplate(template: Template): Promise<string> {
 
     
     return new Promise<string>((resolve, reject) => {
-        if (object == undefined) {
-            Zlib.gzip(object2, (err, result) => {
-                if (err) {
-                    reject(err.message)
-                } else {
-                    resolve( JSON.stringify({
-                        author: template.author,
-                        name: template.name,
-                        version: template.version,
-                        code: result.toString("base64")
+        if (templateResult == 3) {
+            if (object == undefined) {
+                Zlib.gzip(object2, (err, result) => {
+                    if (err) {
+                        reject(err.message)
+                    } else {
+                        resolve( JSON.stringify({
+                            author: template.author,
+                            name: template.name,
+                            version: template.version,
+                            code: result.toString("base64")
+                        })
+                            
+                        )
+                    }
+                })
+            } else {
+                Zlib.gzip(object, (err, result) => {
+                    if (err) {
+                        reject(err.message)
+                    } else {
+                        resolve( JSON.stringify({
+                            author: template.author,
+                            name: template.name,
+                            version: template.version,
+                            code: result.toString("base64")
+                        })
+                            
+                        )
+                    }
+                })
+            }
+        } else if (templateResult == 1) {
+            
+                if (object == undefined) {
+                    Zlib.gzip(object2, (err, result) => {
+                        if (err) {
+                            reject(err.message)
+                        } else {
+                            resolve( JSON.stringify({
+                                author: template.author,
+                                name: template.name,
+                                version: template.version,
+                                code: result.toString("base64")
+                            })
+                                
+                            )
+                        }
                     })
-                        
-                    )
-                }
-            })
-        } else {
-            Zlib.gzip(object, (err, result) => {
-                if (err) {
-                    reject(err.message)
                 } else {
-                    resolve( JSON.stringify({
-                        author: template.author,
-                        name: template.name,
-                        version: template.version,
-                        code: result.toString("base64")
+                    Zlib.gzip(object, (err, result) => {
+                        if (err) {
+                            reject(err.message)
+                        } else {
+                            var data = {
+                                author: template.author,
+                                name: template.name,
+                                version: template.version,
+                                data: result.toString("base64")
+                            }
+                            const ws = new WebSocket('ws://localhost:31371/codeutilities/item');
+                            ws.on('error', reject);
+                            ws.on('message', msg => console.log(msg + " "));
+                            ws.on('open', function open() {
+                                
+                                
+
+                                ws.send(JSON.stringify({
+                                    type: 'template',
+                                    data: JSON.stringify(data),
+                                    source: 'from ' + data.author
+                                }));
+                                resolve("Success")
+                            });
+                            
+                        }
                     })
-                        
-                    )
-                }
-            })
-        }
+                };
+            }
+            else if (templateResult == 2) {
+            
+                if (object == undefined) {
+                    Zlib.gzip(object2, (err, result) => {
+                        if (err) {
+                            reject(err.message)
+                        } else {
+                            resolve( JSON.stringify({
+                                author: template.author,
+                                name: template.name,
+                                version: template.version,
+                                code: result.toString("base64")
+                            }))
+                        }
+                    })
+                } else {
+                    Zlib.gzip(object, (err, result) => {
+                        if (err) {
+                            reject(err.message)
+                        } else {
+                            var data = {
+                                author: template.author,
+                                name: template.name,
+                                version: template.version,
+                                data: result.toString("base64") // just as a note. WHY??? why do u need the code property to be data?? (and thats just a socket thing??!?)
+                            }
+                            const ws = new WebSocket('ws://localhost:31371/codeutilities/item');
+                            ws.on('error', reject);
+                            ws.on('message', msg => console.log(msg + " "));
+                            ws.on('open', function open() {
+                                
+                                
+
+                                ws.send(JSON.stringify({
+                                    type: 'template',
+                                    data: JSON.stringify(data),
+                                    source: 'from df.js'
+                                }));
+                                resolve("Success")
+                            });
+                            
+                        }
+                    })
+                };
+            }
+            else if (templateResult == 0) {
+            
+                if (object == undefined) {
+                    Zlib.gzip(object2, (err, result) => {
+                        if (err) {
+                            reject(err.message)
+                        } else {
+                            resolve( JSON.stringify({
+                                author: template.author,
+                                name: template.name,
+                                version: template.version,
+                                code: result.toString("base64")
+                            }))
+                        }
+                    })
+                } else {
+                    Zlib.gzip(object, (err, result) => {
+                        if (err) {
+                            reject(err.message)
+                        } else {
+                            var data = {
+                                author: template.author,
+                                name: template.name,
+                                version: template.version,
+                                code: result.toString("base64")
+                            }
+                            
+                            
+                        }
+                    })
+                };
+            }
         
     })
+}
+
+export enum TemplateResult {
+    "recodeBuiltIn", "recodeSocketDefAuth", "recodeSocketJS", "creativeNBT"
 }
 
 function identifyArgs(block: string): Object {
