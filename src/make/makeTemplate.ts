@@ -1,4 +1,3 @@
-import { buffer } from "stream/consumers";
 import { Template } from "../types/createInitObject"
 import { customEvent, entityEvent, playerEvent } from "../types/events"
 import Zlib from "zlib";
