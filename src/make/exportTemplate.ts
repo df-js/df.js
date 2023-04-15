@@ -1,7 +1,7 @@
 import { Template } from "../types/createInitObject"
 import { customEvent, entityEvent, playerEvent } from "../types/events"
 import Zlib from "zlib";
-export function makeTemplate(template: Template): Promise<string> {
+export function exportTemplate(template: Template): Promise<string> {
     var block = ""
     
     if ((<customEvent>template.event).eventType) block = (<customEvent>template.event).eventType; else block = "event"
