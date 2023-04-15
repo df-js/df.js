@@ -180,7 +180,7 @@ export function exportTemplate(template: Template, templateResult : TemplateResu
                                 version: template.version,
                                 code: result.toString("base64")
                             }
-                            
+                            resolve(`/dfgive ${template.block}{display:{Name:'{"text":"${data.name}"}'},PublicBukkitValues:{"hypercube:codetemplatedata":'{name:"${data.name}",code:"${data.code}",version:"${data.version}",author:"${data.author}"}'}} 1`)
                             
                         }
                     })
