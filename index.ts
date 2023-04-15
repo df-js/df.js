@@ -7,4 +7,4 @@ import { exportTemplate } from "./src/make/exportTemplate"
 
 enum Events {"playerEvent" = playerEvent, "entityEvent" = entityEvent}
 
-export default {createTemplate, exportTemplate}
+export default {createTemplate, exportTemplate, Events}
